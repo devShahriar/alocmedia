@@ -8,7 +8,8 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/Shahriar-shudip/alocmedia/handlers"
+	"github.com/devShahriar/alocmedia/backend/auth/errorHandler"
+	"github.com/devShahriar/alocmedia/backend/auth/handlers"
 	cors "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
@@ -17,9 +18,16 @@ func main() {
 	l := log.New(os.Stdout, "Auth api", log.LstdFlags)
 
 	userHandler := handlers.NewUserHandler(l)
+	errorH := errorHandler.NewErrorHandler(l)
 
 	sm := mux.NewRouter() //return a new router instance
 
+	//ws handler
+
+	wsHandler := sm.Methods(http.MethodGet).Subrouter()
+	wsHandler.HandleFunc("/ws/validate/{userId:[a-z]+}", errorH.WsHandler)
+
+	//insert user handler
 	postUser := sm.Methods(http.MethodPost).Subrouter()
 	postUser.HandleFunc("/insert/user", userHandler.InsertUser)
 	origin := []string{"*"}
@@ -32,7 +40,7 @@ func main() {
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,
 	}
-
+	go errorHandler.Hub.Run()
 	go func() {
 		err := server.ListenAndServe()
 		if err != nil {

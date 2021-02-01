@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Shahriar-shudip/alocmedia/db"
+	"github.com/devShahriar/alocmedia/backend/auth/db"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -35,9 +35,10 @@ func (u *UsersHandler) InsertUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Data is not correct", http.StatusBadRequest)
 	}
 
-	err = user.InsertUser()
+	err = user.InsertUser(w)
+
 	if err != nil {
-		u.l.Println(err)
+		u.l.Println(err.Error())
 		http.Error(w, "User was not inserted ", http.StatusBadRequest)
 	}
 }
