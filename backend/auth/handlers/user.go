@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -19,6 +20,30 @@ func NewUserHandler(l *log.Logger) *UsersHandler {
 	return &UsersHandler{l}
 }
 
+//Login checker
+func (u *UsersHandler) Login(w http.ResponseWriter, r *http.Request) {
+	userinfo := &db.UserLogin{}
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(userinfo)
+	if err != nil {
+		http.Error(w, "a", http.StatusBadRequest)
+	}
+	res, err := userinfo.LoginUser()
+	w.Header().Set("Content-Type", "application/json")
+	if res {
+		Msg := &db.LoginMsg{"Valid"}
+		msgJson, _ := json.Marshal(Msg)
+		w.Write(msgJson)
+	} else {
+		Msg := &db.LoginMsg{"invalid user"}
+		msgJson, _ := json.Marshal(Msg)
+		w.Write(msgJson)
+
+	}
+
+}
+
+//Sign in User Handler
 func (u *UsersHandler) InsertUser(w http.ResponseWriter, r *http.Request) {
 	user := &db.User{}
 	err := user.FromJson(r.Body)

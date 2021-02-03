@@ -8,44 +8,44 @@ export default function MenuItem(props) {
         {
             path: "/book",
             title: "Books",
-            imgPath: "/books.jpeg",
+            imgPath: "/books.png",
             desc: "Find the latest books here"
         }
         ,
         {
             path: "/3d",
             title: "3d world",
-            imgPath: "/3d.jpg",
+            imgPath: "/3d.png",
             desc: "sell of buy your 3D models"
         },
         {
             path: "/appliance.jpg",
             title: "Home appliance",
-            imgPath: "/appliance.jpg",
+            imgPath: "/appliance.png",
             desc: "Find your necessary home appliance here"
         },
         {
             path: "/architecture",
             title: "Books",
-            imgPath: "/architecture.jpeg",
+            imgPath: "/architecture.png",
             desc: "Get the best architectact here hire now"
         },
         {
             path: "/bedding",
             title: "Bedding and Bedclothes",
-            imgPath: "/book.jpeg",
+            imgPath: "/book.png",
             desc: "Looking for bedding cloth you are in the right place"
         },
         {
             path: "/handicrafts",
             title: "Handicrafts",
-            imgPath: "/handcraft.jpg",
+            imgPath: "/handcraft.png",
             desc: "Find the latest books here"
         },
         {
             path: "/book",
             title: "Books",
-            imgPath: "/book.jpeg",
+            imgPath: "/book.png",
             desc: "Find the latest books here"
         }
     ]
@@ -60,7 +60,7 @@ export default function MenuItem(props) {
                        <a href={res.path} className={styles.card}>
                     <h3>{res.title} &rarr;</h3>
                     <div className="card__image-container">
-                        <img src={res.imgPath} width={350} />
+                        <Image src={res.imgPath} width={350} height={300}/>
                     </div>
                     <p>{res.desc}</p>
                 </a>

@@ -159,10 +159,10 @@ func CheckEmail(payload *Payload) {
 
 func CheckPhone(payload *Payload) {
 	db := util.GetConnection(util.Conn{host, port, user, password, dbname})
-	email := payload.Data
-	query := `select phone from userinfo where email=$1`
+	phone := payload.Data
+	query := `select phone from userinfo where phone=$1`
 
-	res, err := db.Query(query, email)
+	res, err := db.Query(query, phone)
 	if err != nil {
 		fmt.Println(err)
 		return

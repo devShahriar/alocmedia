@@ -46,6 +46,7 @@ func (u *User) ToJson(w http.ResponseWriter) error {
 	return encoder.Encode(u)
 }
 
+//Inserts user data in the database for sign up
 func (u *User) InsertUser(w http.ResponseWriter) error {
 	db := util.GetConnection(util.Conn{host, port, user, password, dbname})
 
@@ -59,4 +60,29 @@ func (u *User) InsertUser(w http.ResponseWriter) error {
 	fmt.Println(res)
 
 	return nil
+}
+
+func (u *UserLogin) AuthorizeUser() {
+
+}
+
+//Login
+
+type LoginMsg struct {
+	Msg string
+}
+
+type UserLogin struct {
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:password validate:"required"`
+}
+
+func (u *UserLogin) LoginUser() (bool, error) {
+	db := util.GetConnection(util.Conn{host, port, user, password, dbname})
+	query := `select email ,password from userinfo where email=$1 and password=$2`
+	res, err := db.Query(query, u.Email, u.Password)
+	if err != nil {
+		return false, err
+	}
+	return res.Next(), nil
 }

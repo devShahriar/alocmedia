@@ -30,6 +30,8 @@ func main() {
 	//insert user handler
 	postUser := sm.Methods(http.MethodPost).Subrouter()
 	postUser.HandleFunc("/insert/user", userHandler.InsertUser)
+	postUser.HandleFunc("/login", userHandler.Login)
+
 	origin := []string{"*"}
 	ch := cors.CORS(cors.AllowedOrigins(origin))
 
