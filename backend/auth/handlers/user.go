@@ -29,15 +29,19 @@ func (u *UsersHandler) Login(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "a", http.StatusBadRequest)
 	}
 	res, err := userinfo.LoginUser()
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	if res {
 		Msg := &db.LoginMsg{"Valid"}
-		msgJson, _ := json.Marshal(Msg)
-		w.Write(msgJson)
+		err := json.NewEncoder(w).Encode(Msg)
+		if err != nil {
+			http.Error(w, "a", http.StatusBadRequest)
+		}
 	} else {
 		Msg := &db.LoginMsg{"invalid user"}
-		msgJson, _ := json.Marshal(Msg)
-		w.Write(msgJson)
+		err = json.NewEncoder(w).Encode(Msg)
+		if err != nil {
+			http.Error(w, "a", http.StatusBadRequest)
+		}
 
 	}
 

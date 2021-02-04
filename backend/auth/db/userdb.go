@@ -69,7 +69,7 @@ func (u *UserLogin) AuthorizeUser() {
 //Login
 
 type LoginMsg struct {
-	Msg string
+	Msg string `json:"msg"`
 }
 
 type UserLogin struct {

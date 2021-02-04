@@ -6,12 +6,13 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+
 	"time"
 
 	"github.com/devShahriar/alocmedia/backend/auth/errorHandler"
 	"github.com/devShahriar/alocmedia/backend/auth/handlers"
-	cors "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -30,14 +31,15 @@ func main() {
 	//insert user handler
 	postUser := sm.Methods(http.MethodPost).Subrouter()
 	postUser.HandleFunc("/insert/user", userHandler.InsertUser)
-	postUser.HandleFunc("/login", userHandler.Login)
 
-	origin := []string{"*"}
-	ch := cors.CORS(cors.AllowedOrigins(origin))
+	pUser := sm.Methods(http.MethodPost).Subrouter()
+	pUser.HandleFunc("/login", userHandler.Login)
+
+	hand := cors.Default().Handler(sm)
 
 	server := http.Server{
 		Addr:         ":9000",
-		Handler:      ch(sm),
+		Handler:      hand,
 		IdleTimeout:  123 * time.Second,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,

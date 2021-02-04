@@ -1,34 +1,39 @@
 import React, { useState } from 'react'
 import { TextField, colors, Button } from "@material-ui/core";
 import styles from '../styles/Login.module.css'
+import axios from 'axios'
+import Router from 'next/router'
 const Login = () => {
 
     const formSubmit = () => {
-        Axios({
-            url: "http://localhost:9000//",
-            method: "post",
-            data:{
-              // sending user email and password
-              email: email,
-              password: password,
-            },
-          }).then((r)=>{
-            console.log(r.data.user)
-            const result = r.data.user
-            if(result === "invalid"){
+        const headers = {
+            'Content-Type': 'text/plain'
+        };
+        axios.post(
+            "http://localhost:9000/login",
+            {
+                email:email,
+                password:password
+            }
+        ).then((r)=>{
+            console.log(r.data.msg)
+            const result = r.data.msg
+            if(result === "invalid user"){
               localStorage.setItem('authTrue' , "false")
               setError(true)
             }
             else{
               setError(false)
               localStorage.setItem('authTrue' , "true")
-              dispatch({type : 'showLogin' , payload : false})
+              if (localStorage.getItem('authTrue') == "true"){
+                  Router.push('/home')
+              }
             }
             
           })
     
      }
-    }
+    
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState(false)
@@ -60,7 +65,6 @@ const Login = () => {
                     id="outlined-secondary"
                     label="Outlined secondary"
                     variant="outlined"
-                    color="green"
                     label="Email"
                     type="text"
                     value={email}
@@ -74,7 +78,6 @@ const Login = () => {
                     id="outlined-secondary"
                     label="Outlined secondary"
                     variant="outlined"
-                    color="green"
                     label="Password"
                     type="password"
                     value={password}

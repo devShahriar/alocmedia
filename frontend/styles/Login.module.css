@@ -17,8 +17,23 @@
 
 .input{
     width : 400px;
-    margin-top: 15%;
+    padding:15px;
+    margin-top: 1%;
     padding-top: 12px;
+    border:1px #ae21ff solid;
+    background-color: rgb(47, 42, 42);
+}
+.errorlabel {
+    color:rgb(241, 16, 16)
+}
+.errorInput{
+        width : 400px;
+        padding:15px;
+        margin-top: 1%;
+        padding-top: 12px;
+        border:1px #ff0404 solid;
+        background-color: rgb(47, 42, 42);
+   
 }
 .button {
     margin-top: 5%;
