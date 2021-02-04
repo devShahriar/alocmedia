@@ -12,7 +12,7 @@ const Signin = () => {
     const [phone, setPhone] = useState('')
     const [company, setCompany] = useState('')
     const [error, setError] = useState(false)
-    const [errorEmail, setErrorMail] = useState(false)
+    const [errorEmail, setErrorMail] = useState('')
 
     const userId= "a"
      let conn =null
@@ -22,8 +22,9 @@ const Signin = () => {
        
         conn.onopen=()=>{
             console.log('c')
-         conn.onmessage=(msg)=>{         
-            console.log(JSON.parse(msg.data).errorMsg)
+         conn.onmessage=(msg)=>{
+            setErrorMail(JSON.parse(msg.data).errorMsg) 
+            console.log(errorEmail)
         } 
         }
         
@@ -32,8 +33,8 @@ const Signin = () => {
    
     
 
-    const send=()=>{
-        conn.send(JSON.stringify({userId:"a", msgtype:"emailValidation",data:email,errorMsg:""}))
+    const send=(em)=>{
+        conn.send(JSON.stringify({"userId":"a", "msgtype":"emailValidation","data":em,"errorMsg":""}))
     }
 
     const formSubmit = () => {
@@ -71,9 +72,11 @@ const Signin = () => {
     }
 
    const emailChange=(e)=>{
-       setEmail(e.target.value)
-       if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
-        send()
+       setEmail(state=>e.target.value)
+       console.log(email)
+       if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.trim())){
+           
+        send(e.target.value.trim())
        }
 
    }
@@ -105,7 +108,8 @@ const Signin = () => {
                     value={email}
                     onChange={emailChange}
                 />
-                {errorEmail ? <p className={styles.errorlabel}>This email is already used</p> : <p></p>}
+                {(errorEmail==="email is used") ? <p className={styles.errorlabel}>This email is already used</p> 
+                :(errorEmail==="email is not used")?<p className={styles.validlabel}>Email is valid </p>:<p></p> }
                 <br></br>
                 <br></br>
                 <input className={(error) ? styles.errorInput : styles.input}

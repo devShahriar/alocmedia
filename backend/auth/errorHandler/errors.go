@@ -141,7 +141,7 @@ func (e *ErrorHandler) WsHandler(w http.ResponseWriter, r *http.Request) {
 func CheckEmail(payload *Payload) {
 	db := util.GetConnection(util.Conn{host, port, user, password, dbname})
 	email := payload.Data
-	fmt.Printf("i am the email %s", email)
+	fmt.Printf("\ni am the email %s\n", email)
 	query := `select email from userinfo where email=$1`
 
 	res, err := db.Query(query, email)
@@ -149,11 +149,16 @@ func CheckEmail(payload *Payload) {
 		fmt.Println(err)
 		return
 	}
+
+	//ok := res.Next()
+	//fmt.Printf("\nError msg1 %v\n", ok)
 	if res.Next() {
+		fmt.Printf("\nError msg if block%v\n", res.Next())
 		payload.ErrorMsg = "email is used"
 		V.Data <- payload
 		return
 	} else {
+		fmt.Printf("\nError msg else block %v\n", res.Next())
 		payload.ErrorMsg = "email is not used"
 		V.Data <- payload
 		return
