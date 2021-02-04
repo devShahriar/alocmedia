@@ -22,6 +22,11 @@ func (v *Validatorhub) Run() {
 			if connection == nil {
 				v.WsConnections[s.UserId] = s.Conn
 			}
+		case s := <-v.Unregister:
+			connection := v.WsConnections[s.UserId]
+			if connection != nil {
+				delete(v.WsConnections, s.UserId)
+			}
 		}
 	}
 }

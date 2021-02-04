@@ -22,9 +22,8 @@ const Signin = () => {
        
         conn.onopen=()=>{
             console.log('c')
-         conn.onmessage=(msg)=>{
-           // const msg = JSON.parse(msg.data)
-            console.log(msg)
+         conn.onmessage=(msg)=>{         
+            console.log(JSON.parse(msg.data).errorMsg)
         } 
         }
         

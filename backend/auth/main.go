@@ -44,6 +44,7 @@ func main() {
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,
 	}
+
 	go errorHandler.Hub.Run()
 	go func() {
 		err := server.ListenAndServe()

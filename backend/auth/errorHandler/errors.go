@@ -51,8 +51,12 @@ func (c *Connections) Write(v interface{}) error {
 	return nil
 }
 
-func (s *Suscribe) WsListerner() {
+func (s Suscribe) WsListerner() {
 	c := s.Conn
+	defer func() {
+		Hub.Unregister <- s
+		c.ws.Close()
+	}()
 	payload := &Payload{
 		UserId:   "",
 		Msgtype:  "",
