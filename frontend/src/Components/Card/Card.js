@@ -1,6 +1,6 @@
 import React from 'react'
 
-import styles from '../../../styles/Home.module.css'
+import styles from './Card.module.css'
 import { Card, Button } from 'react-bootstrap'
 import Image from 'next/image'
 export default function MenuItem(props) {
@@ -57,10 +57,11 @@ export default function MenuItem(props) {
         <div className={styles.grid}>
             { val.map(res => {
                 return(
-                       <a href={res.path} className={styles.card}>
-                    <h3>{res.title} &rarr;</h3>
+                <a href={res.path} className={styles.card}>
+                    
                     <div className="card__image-container">
-                        <Image src={res.imgPath} width={350} height={300}/>
+                        <h3>{res.title} &rarr;</h3>
+                        <Image src={res.imgPath} quality="85" la width={400} height={400}/>
                     </div>
                     <p>{res.desc}</p>
                 </a>
