@@ -5,8 +5,11 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
+	"time"
 
 	"github.com/devShahriar/alocmedia/backend/auth/util"
+	"github.com/dgrijalva/jwt-go"
 	_ "github.com/lib/pq"
 )
 
@@ -68,21 +71,52 @@ func (u *UserLogin) AuthorizeUser() {
 
 //Login
 
-type LoginMsg struct {
-	Msg string `json:"msg"`
-}
-
 type UserLogin struct {
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:password validate:"required"`
 }
 
-func (u *UserLogin) LoginUser() (bool, error) {
+type UserResponse struct {
+	UserId string `json:"userId"`
+	Name   string `json:"name"`
+	Email  string `json:"email"`
+	Msg    string `json:"msg"`
+}
+
+func (u *UserLogin) LoginUser() (string, bool, error) {
 	db := util.GetConnection(util.Conn{host, port, user, password, dbname})
-	query := `select email ,password from userinfo where email=$1 and password=$2`
+	query := `select user_id,name,email from userinfo where email=$1 and password=$2`
 	res, err := db.Query(query, u.Email, u.Password)
-	if err != nil {
-		return false, err
+	userResponse := UserResponse{}
+
+	userExist := res.Next()
+	var jwt_token string
+	if userExist {
+		err := res.Scan(&userResponse.UserId, &userResponse.Name, &userResponse.Email)
+		if err != nil {
+
+		}
+		jwt_token, err = CreateToken(&userResponse)
+
 	}
-	return res.Next(), nil
+	if err != nil {
+		return "", false, err
+	}
+	return jwt_token, userExist, nil
+}
+
+func CreateToken(u *UserResponse) (string, error) {
+
+	os.Setenv("ACCESS_SECRET", "asdfasdfasdf")
+	atClaims := jwt.MapClaims{}
+	atClaims["userId"] = u.UserId
+	atClaims["name"] = u.Name
+	atClaims["email"] = u.Email
+	atClaims["exp"] = time.Now().Add(time.Minute * 15).Unix()
+	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
+	token, err := at.SignedString([]byte(os.Getenv("ACCESS_SECRET")))
+	if err != nil {
+		return "", err
+	}
+	return token, nil
 }

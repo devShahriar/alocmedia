@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/devShahriar/alocmedia/backend/auth/db"
 	"github.com/go-playground/validator/v10"
@@ -28,16 +29,29 @@ func (u *UsersHandler) Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "a", http.StatusBadRequest)
 	}
-	res, err := userinfo.LoginUser()
+	userResponse, res, err := userinfo.LoginUser()
+
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	fmt.Println(res)
 	if res {
-		Msg := &db.LoginMsg{"Valid"}
-		err := json.NewEncoder(w).Encode(Msg)
+		fmt.Println(userResponse)
+		expirationTime := time.Now().Add(5 * time.Minute)
+
+		http.SetCookie(w, &http.Cookie{
+			Name:     "authT",
+			Value:    userResponse,
+			Path:     "/",
+			Expires:  expirationTime,
+			HttpOnly: true,
+			Domain:   "http://localhost:3000",
+		})
+		p, err := json.Marshal(userResponse)
+		w.Write([]byte(p))
 		if err != nil {
 			http.Error(w, "a", http.StatusBadRequest)
 		}
 	} else {
-		Msg := &db.LoginMsg{"invalid user"}
+		Msg := &db.UserResponse{Msg: "invalid user"}
 		err = json.NewEncoder(w).Encode(Msg)
 		if err != nil {
 			http.Error(w, "a", http.StatusBadRequest)
@@ -46,6 +60,9 @@ func (u *UsersHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+//jwt create cookie
+//func CreateToken()
 
 //Sign in User Handler
 func (u *UsersHandler) InsertUser(w http.ResponseWriter, r *http.Request) {

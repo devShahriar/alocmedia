@@ -33,7 +33,7 @@ export default function MenuItem(props) {
         {
             path: "/bedding",
             title: "Bedding and Bedclothes",
-            imgPath: "/book.png",
+            imgPath: "/decoration.png",
             desc: "Looking for bedding cloth you are in the right place"
         },
         {
@@ -42,12 +42,7 @@ export default function MenuItem(props) {
             imgPath: "/handcraft.png",
             desc: "Find the latest books here"
         },
-        {
-            path: "/book",
-            title: "Books",
-            imgPath: "/book.png",
-            desc: "Find the latest books here"
-        }
+    
     ]
 
 
@@ -55,16 +50,18 @@ export default function MenuItem(props) {
 
     return (
         <div className={styles.grid}>
-            { val.map(res => {
+            { val.map((res,key) => {
                 return(
-                <a href={res.path} className={styles.card}>
+                
+                <a key={key} href={res.path} className={styles.card}>
                     
-                    <div className="card__image-container">
+                    <div key={key} className="card__image-container">
                         <h3>{res.title} &rarr;</h3>
-                        <Image src={res.imgPath} quality="85" la width={400} height={400}/>
+                        <Image src={res.imgPath} quality="85" width={400} height={400}/>
                     </div>
                     <p>{res.desc}</p>
                 </a>
+            
                 )
              
             })
