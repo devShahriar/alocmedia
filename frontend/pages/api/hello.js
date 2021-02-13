@@ -3,6 +3,7 @@
 
 import axios  from 'axios'
 import {setCookie} from 'nookies'
+import { AuthToken } from '../../src/util/validator'
 
 export default (req, res) => {
   const email = req.body.email
@@ -15,7 +16,8 @@ export default (req, res) => {
     }
   ).then(r=>{
     console.log(r.data)
-    setCookie({ res }, 'auth', r.data, { secure: process.env.NODE_ENV === 'devlopment', maxAge: 72576000, httpOnly: true, path: '/' }) 
+    const token = new AuthToken(r.data)
+    setCookie({ res }, 'auth', r.data, { secure: process.env.NODE_ENV === 'devlopment', maxAge: token.expiresAt(), httpOnly: true, path: '/' }) 
     res.json(r.data)
   })
 

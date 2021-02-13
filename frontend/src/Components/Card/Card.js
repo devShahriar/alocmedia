@@ -52,7 +52,6 @@ export default function MenuItem(props) {
         <div className={styles.grid}>
             { val.map((res,key) => {
                 return(
-                
                 <a key={key} href={res.path} className={styles.card}>
                     
                     <div key={key} className="card__image-container">
