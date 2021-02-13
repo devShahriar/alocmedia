@@ -55,6 +55,23 @@
     justify-self:center;
     align-items: center;
 }
-
+.toogle{
+    position:absolute;
+    top:0;
+    right: 0;
+    width: 35px;
+    height: 35px;
+    background: rgb(3, 3, 3);
+    color:whitesmoke;
+    cursor:pointer;
+}
+@media (max-width: 767px) {
+    .sidebar{
+        left: -60px;
+    }
+    .sidebar.active{
+        left: 0px;
+    }
+}
 
 

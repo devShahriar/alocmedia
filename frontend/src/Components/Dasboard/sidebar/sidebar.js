@@ -1,12 +1,13 @@
 import React from 'react'
 import styles from './sidebar.module.css'
 import cn from 'classnames'
-import {FaBriefcase,FaAdn , FaCartPlus} from 'react-icons/fa'
+import {FaBriefcase,FaAdn , FaCartPlus,FaAlignJustify} from 'react-icons/fa'
 import {BsFillBriefcaseFill} from 'react-icons/bs'
 import {CgFileAdd} from 'react-icons/cg'
 import {AiOutlineSetting} from 'react-icons/ai'
 export default function SideBar() {
     return (
+        <div>
         <div className={styles.sidebar}>
             <div className={cn(styles.sidebar, styles.flex)}>
               
@@ -35,6 +36,11 @@ export default function SideBar() {
                     </ul>
                 </nav>
             </div>
+           
+        </div> 
+        <div >
+        <FaAlignJustify className={styles.toogle}/>
+        </div>
         </div>
     )
 }
