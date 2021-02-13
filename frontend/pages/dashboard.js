@@ -4,6 +4,7 @@ import { AuthToken } from '../src/util/validator';
 import {parseCookies} from 'nookies'
 import { Route } from 'react-router-dom';
 import Login from './login';
+import { SideBar } from '../src/Components';
 const Dashboard =(props) =>{
 
 
@@ -11,14 +12,7 @@ const Dashboard =(props) =>{
 
     return (
         <div>
-          
-         {props.res}
-         <button onClick={()=>{
-          let token = parseCookies({})
-          console.log(token)
-         }}>
-             getToken
-         </button>
+         <SideBar/>
         </div>
     )   
 }
@@ -61,7 +55,7 @@ export async function getServerSideProps(ctx){
           }
     }
     
-    return { props:info}
+    return { props:info }
 }
 
 export default Dashboard
