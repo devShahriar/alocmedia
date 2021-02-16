@@ -4,8 +4,9 @@ import { AuthToken } from '../src/util/validator';
 import {parseCookies} from 'nookies'
 import { Route } from 'react-router-dom';
 import Login from './login';
-import { SideBar } from '../src/Components';
-const Dashboard =(props) =>{
+import { SideBar ,CreatePost} from '../src/Components';
+import styles from '../styles/dashboard.module.css'
+const Dashboard =({info}) =>{
 
 
     const TOKEN_STORAGE_KEY = "auth"
@@ -13,6 +14,9 @@ const Dashboard =(props) =>{
     return (
         <div>
          <SideBar/>
+         <div className={styles.container}>
+         <CreatePost info={info}/>
+         </div>
         </div>
     )   
 }
@@ -55,7 +59,7 @@ export async function getServerSideProps(ctx){
           }
     }
     
-    return { props:info }
+    return { props: {info} }
 }
 
 export default Dashboard

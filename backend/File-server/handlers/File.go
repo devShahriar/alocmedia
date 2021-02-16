@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strconv"
 	"sync"
@@ -66,6 +67,42 @@ func (f *File) UploadMultiPart(rw http.ResponseWriter, r *http.Request) {
 	f.log.Printf("time took to handle multipart %v", end)
 }
 
+func (f *File) UploadMultipleFiles(rw http.ResponseWriter, r *http.Request) {
+	fmt.Println("UploadM")
+	reader, err := r.MultipartReader()
+
+	if err != nil {
+		fmt.Println(err)
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	for {
+		part, err := reader.NextPart()
+		if err == io.EOF {
+			fmt.Println(err)
+			break
+		}
+
+		//if part.FileName() is empty, skip this iteration.
+		if part.FileName() == "" {
+			continue
+		}
+		dst, err := os.Create("/home/shudip/i" + part.FileName())
+		defer dst.Close()
+
+		if err != nil {
+			fmt.Println(err)
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		if _, err := io.Copy(dst, part); err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+}
+
 func (f *File) saveFile(id, path string, rw http.ResponseWriter, r *http.Request) {
 	fp := filepath.Join(id, path)
 	err := f.store.Save(fp, r.Body)
@@ -74,6 +111,7 @@ func (f *File) saveFile(id, path string, rw http.ResponseWriter, r *http.Request
 		http.Error(rw, "Unable to save file", http.StatusInternalServerError)
 	}
 }
+
 func (f *File) saveMultipartFile(id, path string, rw http.ResponseWriter, r io.Reader) {
 	fp := filepath.Join(id, path)
 	err := f.store.Save(fp, r)

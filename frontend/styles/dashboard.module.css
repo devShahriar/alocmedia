@@ -1,0 +1,11 @@
+.container{
+    position: relative;
+    top: 150px;
+    left: 150px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: blanchedalmond
+
+}
