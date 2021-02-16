@@ -28,7 +28,7 @@ func main() {
 	uploadFile.HandleFunc("/", fileHandler.UploadMultiPart)
 
 	getFile := sm.Methods(http.MethodGet).Subrouter()
-	getFile.Handle("/images/{id:[0-9]+}/{filename:[a-zA-Z]+\\.[a-z]{3}}", http.StripPrefix("/images/", http.FileServer(http.Dir("./imageStore"))))
+	getFile.Handle("/images/{id:[0-9]+}/{filename:[a-zA-Z0-9]+\\.[a-z]{3}}", http.StripPrefix("/images/", http.FileServer(http.Dir("./imageStore"))))
 
 	server := http.Server{
 		Addr:         ":9001",
