@@ -8,12 +8,15 @@ const CreatePost  = (props) => {
     const [title , setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [files , setFiles] = useState('')
+    const images = []
     const submit =()=>{
 
     }
 
     const uploadFiles=()=>{
       for (let i =0 ; i < files.length;i++){
+        images.push(files[i].name)
+        console.log(images)
         upload(files[i])
       }
     }

@@ -2,6 +2,9 @@ package handlers
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"strconv"
@@ -67,4 +70,36 @@ func (p *Products) Middleware(next http.Handler) http.Handler {
 		next.ServeHTTP(w, req)
 	})
 
+}
+
+type Person struct {
+	Name string `json:"name"`
+	Age  string `json:"age"`
+}
+type Persons []Person
+
+func (p *Persons) FromJson(r io.Reader) error {
+	e := json.NewDecoder(r)
+	return e.Decode(p)
+}
+
+type Post struct {
+	Userid string   `json:"userId"`
+	Images []string `json:"images"`
+}
+
+func (p *Post) FromJson(r io.Reader) error {
+	e := json.NewDecoder(r)
+	return e.Decode(p)
+}
+func (p *Products) TestAdd(w http.ResponseWriter, r *http.Request) {
+	pr := &Post{}
+	err := pr.FromJson(r.Body)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, "unable sfsadfas to parse", http.StatusInternalServerError)
+		return
+	}
+	p.l.Println(pr.Userid)
+	p.l.Println(pr.Images)
 }

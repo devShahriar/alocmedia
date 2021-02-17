@@ -31,6 +31,10 @@ func main() {
 	postRoutes := sm.Methods(http.MethodPost).Subrouter()
 	postRoutes.HandleFunc("/addproduct", ph.AddProduct)
 	postRoutes.Use(ph.Middleware)
+
+	postR := sm.Methods(http.MethodPost).Subrouter()
+	postR.HandleFunc("/TestAdd", ph.TestAdd)
+
 	origin := []string{"*"}
 
 	ch := goCros.CORS(goCros.AllowedOrigins(origin))
