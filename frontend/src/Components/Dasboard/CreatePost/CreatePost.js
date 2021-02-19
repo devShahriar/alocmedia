@@ -7,15 +7,38 @@ const CreatePost  = (props) => {
 
     const [title , setTitle] = useState('')
     const [description, setDescription] = useState('')
+    const [price , setPrice] = useState('')
+    const [storeName ,setStore] = useState('')
+    const [location , setLocation] = useState('')
+    const [thumbnail, setThumbnail] = useState('')
+    const [images , setImage] = useState([])
+    const [catagory,setCatagory] = useState('')
     const [files , setFiles] = useState('')
-    const images = []
-    const submit =()=>{
+    const imageList = []
 
+
+
+    const submit =()=>{
+      axios.post("http://localhost:9090/addproduct" , {
+        
+          "title":"titile",
+          "description":"asdfasfeasd",
+          "price":"asdf",
+          "userId":"a",
+          "store_name":"store",
+          "location":"khisafasfsdaf",
+          "thumbnail":imageList[0],
+          "images":imageList,
+          "catagory":"asdfas" 
+      }
+      )
     }
 
     const uploadFiles=()=>{
       for (let i =0 ; i < files.length;i++){
-        images.push(files[i].name)
+        if(imageList.indexOf(files[i].name)===-1){
+          imageList.push(files[i].name)
+        }
         console.log(images)
         upload(files[i])
       }
@@ -34,7 +57,7 @@ const CreatePost  = (props) => {
     return (
       <div className={Styles.container}>
        <h1>{props.info.userId}</h1> 
-     <Form onSubmit={submit}>
+     <Form >
             <Form.Field inline>
               <input
                 style={{width:'300px'}}
@@ -58,8 +81,9 @@ const CreatePost  = (props) => {
              
             </Form.Field> 
             <input type="file" name="file" multiple onChange={ e=> setFiles(e.target.files)}/>
-            <button onClick={uploadFiles}>submit</button>
+            <button onClick={uploadFiles}>upload</button>
             <br></br>
+            <button onClick={submit}>submit</button>
           </Form>
       </div>    
     )

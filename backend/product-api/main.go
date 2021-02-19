@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/Shahriar-shudip/golang-microservies-tuitorial/product-api/handlers"
-	goCros "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -28,14 +28,11 @@ func main() {
 	postRoutes := sm.Methods(http.MethodPost).Subrouter()
 	postRoutes.HandleFunc("/addproduct", ph.AddProduct)
 	postRoutes.Use(ph.Middleware)
-
-	origin := []string{"*"}
-
-	ch := goCros.CORS(goCros.AllowedOrigins(origin))
+	hand := cors.Default().Handler(sm)
 
 	server := http.Server{
 		Addr:         ":9090",
-		Handler:      ch(sm),
+		Handler:      hand,
 		IdleTimeout:  123 * time.Second,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,
