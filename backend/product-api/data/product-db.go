@@ -4,23 +4,46 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"time"
+
+	"github.com/Shahriar-shudip/golang-microservies-tuitorial/product-api/util"
+	"github.com/rs/xid"
+)
+
+const (
+	host     string = "localhost"
+	port     int    = 5432
+	user     string = "postgres"
+	password string = "asd"
+	dbname   string = "gopg"
 )
 
 type Product struct {
-	ID         int     `json:"id"`
-	Name       string  `json:"name"`
-	Decription string  `json:"description"`
-	Price      float32 `json:"price"`
-	SKU        string  `json:"sku"`
-	CreateOn   string  `json:"-"`
-	UpdateOn   string  `json:"-"`
-	DeletedOn  string  `json:"-"`
+	Id         string          `json:"-"`
+	Title      string          `json:"title"`
+	Decription string          `json:"description"`
+	Price      float32         `json:"price"`
+	UserId     string          `json:"userId"`
+	Store_name string          `json:"store_name"`
+	Location   string          `json:"location"`
+	Thumbnail  string          `json:thumbnail`
+	Images     json.RawMessage `json:"images"`
+	Catagory   string          `json:"catagory"`
 }
 
 func (p *Product) FromJson(r io.Reader) error {
 	e := json.NewDecoder(r)
 	return e.Decode(p)
+}
+func (p *Product) AddProduct() {
+	db := util.GetConnection(util.Conn{host, port, user, password, dbname})
+	p.Id = generateId()
+	ImagesStr := string(p.Images)
+	fmt.Println(ImagesStr)
+	query := `insert into products 
+	(product_id,  product_title ,product_desc,product_price,user_id,store_name,location,thumbnail ,images,catagory)
+	values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`
+	res, _ := db.Query(query, p.Id, p.Title, p.Decription, p.Price, p.UserId, p.Store_name, p.Location, p.Thumbnail, ImagesStr, p.Catagory)
+	fmt.Println(res)
 }
 
 type Products []*Product
@@ -29,64 +52,13 @@ func (p *Products) FromJson(r io.Reader) error {
 	e := json.NewDecoder(r)
 	return e.Decode(p)
 }
+
 func (p *Products) ToJson(w io.Writer) error {
 	encoder := json.NewEncoder(w)
 	return encoder.Encode(p)
 }
 
-var productlist = []*Product{
-	&Product{
-		ID:         1,
-		Name:       "shoe",
-		Decription: "newly created",
-		Price:      1.25,
-		SKU:        "adf",
-		CreateOn:   time.Now().UTC().String(),
-		UpdateOn:   time.Now().UTC().String(),
-	},
-	&Product{
-		ID:         2,
-		Name:       "Dress",
-		Decription: "newly created",
-		Price:      2.25,
-		SKU:        "adf",
-		CreateOn:   time.Now().UTC().String(),
-		UpdateOn:   time.Now().UTC().String(),
-	},
-}
-
-func GetProducts() Products {
-	return productlist
-}
-
-func AddProduct(p *Product) {
-	p.ID = getNextID()
-	productlist = append(productlist, p)
-}
-
-func getNextID() int {
-	lp := productlist[len(productlist)-1]
-	return lp.ID + 1
-}
-
-func UpdateProduct(id int, prod *Product) error {
-	_, pos, err := getProductById(id)
-	if err != nil {
-		return err
-	}
-	prod.ID = id
-	productlist[pos] = prod
-	return nil
-}
-
-var ErrProduct = fmt.Errorf("Product not found")
-
-func getProductById(id int) (*Product, int, error) {
-	for i, p := range productlist {
-		if id == p.ID {
-			return p, i, nil
-		}
-
-	}
-	return nil, -1, ErrProduct
+func generateId() string {
+	guid := xid.New()
+	return guid.String()
 }
