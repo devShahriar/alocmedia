@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/Shahriar-shudip/golang-microservies-tuitorial/product-api/data"
 	"github.com/gorilla/mux"
@@ -22,32 +21,24 @@ func NewProducts(l *log.Logger) *Products {
 }
 
 func (p *Products) GetProducts(w http.ResponseWriter, r *http.Request) {
-	productList := data.GetProducts()
-	err := productList.ToJson(w)
-	if err != nil {
-		http.Error(w, "unable to parse", http.StatusInternalServerError)
-	}
+
 }
 
 func (p *Products) AddProduct(w http.ResponseWriter, r *http.Request) {
 
 	prod := r.Context().Value(KeyProduct{}).(*data.Product)
-	data.AddProduct(prod)
+	prod.AddProduct()
 }
 
-func (p *Products) UpdateProduct(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r) // ret
-	id, _ := strconv.Atoi(vars["id"])
-	prod := r.Context().Value(KeyProduct{}).(*data.Product)
-	err := data.UpdateProduct(id, prod)
-	if err == data.ErrProduct {
-		http.Error(w, "unable to find the product ", http.StatusBadRequest)
-		return
-	}
+func (p *Products) ProductDetails(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	fmt.Println(params["id"])
+	prod := data.GetProduct(string(params["id"]))
+	err := prod.ToJson(w)
 	if err != nil {
-		http.Error(w, "Product not found", http.StatusInternalServerError)
-		return
+		fmt.Println(err)
 	}
+
 }
 
 type KeyProduct struct{}
@@ -67,18 +58,5 @@ func (p *Products) Middleware(next http.Handler) http.Handler {
 		req := r.WithContext(ctx)
 		next.ServeHTTP(w, req)
 	})
-
-}
-
-func (p *Products) TestAdd(w http.ResponseWriter, r *http.Request) {
-	pr := &data.Product{}
-	err := pr.FromJson(r.Body)
-	if err != nil {
-		fmt.Println(err)
-		http.Error(w, "unable sfsadfas to parse", http.StatusInternalServerError)
-		return
-	}
-
-	pr.AddProduct()
 
 }

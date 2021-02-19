@@ -6,6 +6,7 @@ require github.com/gorilla/mux v1.8.0
 
 require (
 	github.com/gorilla/handlers v1.5.1
-	github.com/jmoiron/sqlx v1.3.1 // indirect
-	github.com/rs/xid v1.2.1 // indirect
+	github.com/jmoiron/sqlx v1.3.1
+	github.com/lib/pq v1.9.0
+	github.com/rs/xid v1.2.1
 )
