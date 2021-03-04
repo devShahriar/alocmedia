@@ -14,9 +14,9 @@ const Dashboard =({info}) =>{
     return (
         <div>
          <SideBar/>
-         <div className={styles.container}>
+         
          <CreatePost info={info}/>
-         </div>
+         
         </div>
     )   
 }

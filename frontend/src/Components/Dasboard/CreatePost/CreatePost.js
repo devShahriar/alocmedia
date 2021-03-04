@@ -60,7 +60,8 @@ const CreatePost  = (props) => {
      <Form >
             <Form.Field inline>
               <input
-                style={{width:'300px'}}
+                className={Styles.title}
+  
                 type="text"
                 placeholder="Title"
                 name="title"
@@ -72,6 +73,7 @@ const CreatePost  = (props) => {
 
             <Form.Field inline>
               <textarea
+                className={Styles.desc}
                 type="text"
                 placeholder="Description"
                 name="description"
