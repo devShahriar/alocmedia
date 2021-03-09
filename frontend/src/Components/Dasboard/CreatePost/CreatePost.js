@@ -2,7 +2,9 @@ import { StylesProvider } from '@material-ui/core'
 import React , {useState} from 'react'
 import Styles from './CreatePost.module.css'
 import axios from 'axios'
-import { Divider, Form, Label, Button, Checkbox } from "semantic-ui-react";
+
+import { Divider, Form, Label,Button, Checkbox } from "semantic-ui-react";
+
 const CreatePost  = (props) => {
 
     const [title , setTitle] = useState('')
@@ -21,15 +23,15 @@ const CreatePost  = (props) => {
     const submit =()=>{
       axios.post("http://localhost:9090/addproduct" , {
         
-          "title":"titile",
-          "description":"asdfasfeasd",
-          "price":"asdf",
-          "userId":"a",
-          "store_name":"store",
-          "location":"khisafasfsdaf",
+          "title":title,
+          "description":description,
+          "price":price,
+          "userId":props.info.userId,
+          "store_name":storeName,
+          "location":location,
           "thumbnail":imageList[0],
           "images":imageList,
-          "catagory":"asdfas" 
+          "catagory":catagory
       }
       )
     }
@@ -81,9 +83,46 @@ const CreatePost  = (props) => {
                 onChange={(e)=>setDescription(e.target.value)}
               />
              
-            </Form.Field> 
-            <input type="file" name="file" multiple onChange={ e=> setFiles(e.target.files)}/>
-            <button onClick={uploadFiles}>upload</button>
+            </Form.Field>
+            <Form.Field inline>
+              <input
+                className={Styles.title}
+  
+                type="text"
+                placeholder="price"
+                name="price"
+                value={price}
+                onChange={(e)=>setPrice(e.target.value)}
+              />
+            </Form.Field>
+            <Form.Field inline>
+              <input
+                className={Styles.title}
+  
+                type="text"
+                placeholder="Location"
+                name="location"
+                value={location}
+                onChange={(e)=>setLocation(e.target.value)}
+              />
+            </Form.Field>
+            <Form.Field inline>
+              <input
+                className={Styles.title}
+  
+                type="text"
+                placeholder="Catagory"
+                name="catagory"
+                value={catagory}
+                onChange={(e)=>setCatagory(e.target.value)}
+              />
+            </Form.Field>  
+            <label className={Styles.customfileupload}>
+            <input style={{display:"none"}} type="file" name="file" multiple onChange={ e=> setFiles(e.target.files)}/>
+            Choose Files
+            </label>
+            <br></br>
+            <button className={Styles.upload} onClick={uploadFiles}>Upload</button>
             <br></br>
             <button onClick={submit}>submit</button>
           </Form>
