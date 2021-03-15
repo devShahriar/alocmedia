@@ -4,6 +4,7 @@ import Styles from './CreatePost.module.css'
 import axios from 'axios'
 
 import { Divider, Form, Label,Button, Checkbox } from "semantic-ui-react";
+import Notification from '../../Notification/Notification';
 
 const CreatePost  = (props) => {
 
@@ -33,7 +34,13 @@ const CreatePost  = (props) => {
           "images":imageList,
           "catagory":catagory
       }
-      )
+      ).then(res=>{
+          if(res){
+            return (
+              <Notification/>
+            )
+          }
+      })
     }
 
     const uploadFiles=()=>{
