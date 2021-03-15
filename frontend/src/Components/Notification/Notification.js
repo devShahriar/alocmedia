@@ -1,9 +1,11 @@
 import Styles from './Notification.module.css'
-
+import Alert from 'react-bootstrap/Alert';
 const Notification =()=>{
     return (
-        <div className="">
-            successful
+        <div >
+            <Alert variant={'success'}>
+                Post added successfuly 
+            </Alert>
         </div> 
     )
 }
