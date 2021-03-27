@@ -17,6 +17,7 @@ const CreatePost  = (props) => {
     const [images , setImage] = useState([])
     const [catagory,setCatagory] = useState('')
     const [files , setFiles] = useState('')
+    const [showNotification , setShownotification] = useState(false)
     const imageList = []
 
 
@@ -36,9 +37,7 @@ const CreatePost  = (props) => {
       }
       ).then(res=>{
           if(res){
-            return (
-              <Notification/>
-            )
+           setShownotification(true)
           }
       })
     }
@@ -65,7 +64,11 @@ const CreatePost  = (props) => {
     }  
     return (
       <div className={Styles.container}>
-       <h1>{props.info.userId}</h1> 
+       <h1>{props.info.userId}</h1>
+       {showNotification?
+       <Notification/>:'' 
+       }
+       
      <Form >
             <Form.Field inline>
               <input

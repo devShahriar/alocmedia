@@ -1,4 +1,4 @@
-import Styles from './Notification.module.css'
+
 import Alert from 'react-bootstrap/Alert';
 const Notification =()=>{
     return (
